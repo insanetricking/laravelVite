@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', [IndexController::class, 'index'])->name('home');
+// Route::middleware("r")->group(function(){
 
-Route::middleware("r")->group(function(){
-    Route::get('/', [IndexController::class, 'index'])->name('home');
-});
+// });
 
 
 // Route::prefix("news")->group(function(){

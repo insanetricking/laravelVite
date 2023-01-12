@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models;
 
 use App\Casts\FileUploadCast;
@@ -28,4 +27,3 @@ class Post extends Model
         return $this->hasMany(Comment::class)->orderBy("created_at");
     }
 }
-?>
