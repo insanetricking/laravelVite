@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\FileUploadCast;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,19 +9,25 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        "title",
-        "description",
-        "preview",
-        "thumbnail",
-    ];
+    public function owner()
+    {
 
-    protected $casts = [
-        "thumbnail" => FileUploadCast::class,
-    ];
+        return $this->belongsTo(User::class, 'owner_id', 'id');
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(Photo::class, 'post_id');
+    }
+
+    public function hashtags()
+    {
+        return $this->belongsToMany(Hashtag::class, 'hashtag_post', 'post_id', 'hashtag_id');
+    }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)->orderBy("created_at");
+        return $this->hasMany(Comment::class);
     }
+
 }

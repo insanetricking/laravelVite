@@ -7,6 +7,8 @@
 
     <title>@yield('title')</title>
 
+    {{-- {{env('APP_NAME')}} --}}
+
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -20,7 +22,7 @@
 <body class="antialiased">
 
 
-@yield('content')
+    @yield('content')
 
     <script src="/js/app.js"></script>
 </body>
