@@ -9,19 +9,25 @@ use Illuminate\Support\Facades\Hash;
 
 class IndexController extends Controller
 {
+
+    private Request $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
+
     public function index()
     {
-        $posts = Post::query()->orderBy('created_at', 'DESC')->limit(3)->get();
+
 
         // dd($posts);
 
-        return view('welcome',[
-            "posts" => $posts,
-
-        ]);
+        return view('home');
     }
 
-    public function php(Request $request)
+    public function login()
     {
 
         // $query = $request->all();
@@ -29,28 +35,55 @@ class IndexController extends Controller
         // dd($query);
 
 
-        return view('test');
+        return view('auth.login');
     }
 
-    public function register(Request $request)
+    public function register()
+    {
+
+        return view('auth.register');
+    }
+
+    public function authorization()
+    {
+        $user = User::whereUsername($this->request->get('username'))->first();
+        if (!$user || !Hash::check($this->request->get('password'), $user->password)) {
+            \Session::flash('error', 'Incorrect Login/Password');
+            return redirect()->back();
+        }
+
+        \Auth::login($user);
+
+        return to_route('home');
+    }
+
+    public function registration(Request $request)
     {
         $user = User::create([
-            'username'=> $request->get('username'),
-            'password'=> Hash::make($request->get('password'))
+            'username' => $this->request->get('username'),
+            'password' => Hash::make($this->request->get('password'))
         ]);
-        $user->information()->create([
-            'name'=> $request->get('name'),
-            'birthday'=> $request->date('birthday')
-        ]);
+        // $user->information()->create([
+        //     'name'=> $request->get('name'),
+        //     'birthday'=> $request->date('birthday')
+        // ]);
 
+
+        \Auth::login($user);
         // dd($user);
         return to_route('home');
     }
 
-    public function profile(int $id)
+    public function logout()
     {
-        $user = User::find($id);
-        dd($user -> information);
-        return view('profile');
+        \Auth::logout();
+        return to_route('auth.login');
     }
+
+    // public function profile(int $id)
+    // {
+    //     $user = User::find($id);
+    //     dd($user -> information);
+    //     return view('profile');
+    // }
 }
